@@ -22,6 +22,7 @@ sudo update-alternatives --set editor /usr/bin/vim.basic
 
 # .bashrc stuff
 cp ./config_files/.bash_aliases ~/
+cp ./config_files/.my_bashrc ~/
 
 if ! grep my_bashrc ~/.bashrc; then
 echo "

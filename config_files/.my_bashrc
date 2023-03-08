@@ -1,6 +1,8 @@
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+# This file is executed immediately after the .bashrc file
+
+# Do not delete old commands in bash history
 HISTSIZE=-1
 HISTFILESIZE=-1
 
 
-# todo a more useful bash prompt i.e. with git branch - set PS1 ... PS4
+# TODO a more useful bash prompt i.e. with git branch - set PS1 ... PS4
