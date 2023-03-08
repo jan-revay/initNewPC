@@ -1,70 +1,95 @@
 #!/bin/bash -x
+# BASE IMAGE: Ubuntu 22.04
 
-# TODO color the xtrace output
+# TODO
+# - Docker
+# - ASP solver (e.g. with Datalog syntax)
 
-readonly IS_VIRTUAL_MACHINE=true
+export PS4="\[\033[1;93m\]+ \[\033[0m\]"
+readonly GCC_VERSION=12
 
-if [ ${IS_VIRTUAL_MACHINE} ]; then
-    sudo apt install -y open-vm-tools open-vm-tools-desktop
+sudo apt update
+sudo apt upgrade
+apt list --upgradable # check for the packages that were not upgraded
+
+readonly IS_VMWARE_VIRTUAL_MACHINE=true  # maybe make this a parameter in the future
+if [ ${IS_VMWARE_VIRTUAL_MACHINE} ]; then
+    sudo apt install -y open-vm-tools open-vm-tools-desktop  # VMware drivers
+else
+    sudo snap install spotify
+    sudo snap install zoom-client
+    sudo apt install -y logiops
 fi
 
-# see https://apt.llvm.org/
-wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
-echo "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy main" | sudo tee /etc/apt/sources.list.d/llvm.list
-echo "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy main"  | sudo tee --append /etc/apt/sources.list.d/llvm.list
+# COMPILERS, DEBUGGERS AND RUNTIMES
 
-sudo apt install -y clang-format clang-tidy clang-tools clang clangd libc++-dev libc++1 libc++abi-dev libc++abi1 \
-    libclang-dev libclang1 liblldb-dev libllvm-ocaml-dev libomp-dev libomp5 lld llvm-dev llvm-runtime llvm
+# Install the most recent llvm see https://apt.llvm.org/
+pushd /tmp || exit
+wget https://apt.llvm.org/llvm.sh
+chmod +x llvm.sh
+sudo ./llvm.sh all
+rm llvm.sh
+popd || exit
 
-sudo apt install -y python3-clang lldb
-sudo apt install rustc
+sudo apt install gcc-${GCC_VERSION}
+sudo apt install rr # see https://github.com/rr-debugger/rr/wiki/Using-rr-in-an-IDE
 
-sudo apt-get update
-sudo apt-get upgrade
-apt list --upgradable
+# TODO improve the Rust installation process using rustup.sh script
+sudo apt install -y rustc gprolog haskell-platform
 
+# runtimes
+sudo apt install -y default-jre dotnet6
+sudo apt install dotnet6
+
+# SNAPS
+
+# productivity
+sudo snap install --classic code
+sudo snap install --classic clion
+sudo snap install emacs
+sudo snap install postman
+sudo snap install todoist
+sudo snap install coq-prover
+
+# graphics & books & sound
 sudo snap install gimp
+sudo snap install krita
 sudo snap install inkscape
 sudo snap install okular
-sudo snap install polar-bookshelf
-sudo snap install foliate
-sudo snap install vlc
-sudo snap install signal-desktop
-sudo snap install fontvuer
-
-sudo snap install code
-sudo snap install clion
-sudo snap install todoist
-sudo snap install emacs
-sudo snap install caprine
 sudo snap install evince
-
-# TO TRY:
-
-# sudo snap install codechecker
-# sudo snap install gitkraken
-# sudo snap install colorpie
-
-sudo apt install -y clang-format
-sudo apt install -y ripgrep
-sudo apt install -y xdotool tree curl neofetch htop tmux
-sudo apt-get install linux-tools-common linux-tools-generic linux-tools-"$(uname -r)"
-sudo apt install -y git make python3-pip build-essential doxygen g++-multilib ccache qtcreator gitk
-sudo apt install -y cmake cmake-gui libpcre3 libz3-dev
-sudo apt install neovim
-# sudo apt install vim
-
-sudo apt install -y at
-sudo apt install -y ttf-mscorefonts-installer
+sudo snap install foliate
+sudo snap install polar-bookshelf
+sudo snap install vlc
+sudo snap install audacity
 sudo snap install fontvuer
-sudo apt install -y dconf-editor
-sudo apt install -y gnome-tweaks
+# messaging
+sudo snap install signal-desktop
+sudo snap install caprine
 
+sudo apt install -y vim neovim qtcreator kdevelop
+sudo apt install -y ripgrep xdotool tree curl neofetch htop tmux at zsh traceroute
+sudo apt install -y linux-tools-common linux-tools-generic linux-tools-"$(uname -r)"
+sudo apt install -y git gitk python3-pip doxygen g++-multilib
+sudo apt install -y make build-essential ccache ninja-build
+sudo apt install -y cmake cmake-gui
+
+sudo apt install -y ttf-mscorefonts-installer
+sudo apt install -y dconf-editor gnome-tweaks
+
+# additional static analyzers
 sudo apt install -y cppcheck iwyu
 pip install flawfinder # C++ lint
 pip install cpplint
+sudo snap install codechecker
+# TODO fb infer
+# TODO cppdepend
+# TODO protolint
+# TODO PVS
 
+# C++ package managers
+pip install conan
 
+# Python packages
 pip install bitarray
 pip install bson
 pip install docutils
@@ -83,10 +108,18 @@ pip install PySide2
 pip install pytest
 pip install pyyaml
 pip install quantities
-pip install repoze.lru
 pip install requests
 pip install scikit-image
 pip install scipy
-pip install six
 pip install tabulate
 pip install jira
+
+
+# maybe unused
+sudo snap install gitkraken
+sudo snap install colorpie
+sudo snap install colorpie
+sudo snap install sqlitebrowser
+
+# cleanup
+sudo apt autoremove
