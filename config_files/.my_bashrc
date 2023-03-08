@@ -1,0 +1,6 @@
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=-1
+HISTFILESIZE=-1
+
+
+# todo a more useful bash prompt i.e. with git branch - set PS1 ... PS4

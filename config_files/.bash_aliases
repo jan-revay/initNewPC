@@ -13,8 +13,15 @@ alias gph='git push'
 alias gpl='git pull'
 
 # bookmarks
-alias c="cd ~/c/"
+alias c='cd ~/c/'
+
+# other
+alias p='python3'
+alias v='vim'
 
 # maybe unused
 alias gr='git review' # a Gerrit thing
 alias d='git review -d'
+
+
+# don't forget about l, la, and ll
