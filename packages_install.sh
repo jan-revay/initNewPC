@@ -31,15 +31,14 @@ sudo ./llvm.sh all
 rm llvm.sh
 popd || exit
 
-sudo apt install gcc-${GCC_VERSION}
-sudo apt install rr # see https://github.com/rr-debugger/rr/wiki/Using-rr-in-an-IDE
+sudo apt install -y gcc-${GCC_VERSION}
+sudo apt install -y rr # see https://github.com/rr-debugger/rr/wiki/Using-rr-in-an-IDE
 
 # TODO improve the Rust installation process using rustup.sh script
 sudo apt install -y rustc gprolog haskell-platform
 
 # runtimes
 sudo apt install -y default-jre dotnet6
-sudo apt install dotnet6
 
 # SNAPS
 
@@ -78,8 +77,8 @@ sudo apt install -y dconf-editor gnome-tweaks
 
 # additional static analyzers
 sudo apt install -y cppcheck iwyu
-pip install flawfinder # C++ lint
-pip install cpplint
+sudo pip install flawfinder # C++ lint
+sudo pip install cpplint
 sudo snap install codechecker
 # TODO fb infer
 # TODO cppdepend
@@ -87,32 +86,31 @@ sudo snap install codechecker
 # TODO PVS
 
 # C++ package managers
-pip install conan
+sudo pip install conan
 
 # Python packages
 pip install bitarray
 pip install bson
-pip install docutils
+sudo pip install docutils
 pip install h5py
 pip install hypothesis
 pip install jinja2
 pip install log4mongo
 pip install lxml
-pip install matplotlib
+sudo pip install matplotlib
 pip install mock
-pip install numpy
+sudo pip install numpy
 pip install pandas
 pip install Pillow
 pip install pymongo
-pip install PySide2
-pip install pytest
+sudo pip install pytest
 pip install pyyaml
 pip install quantities
 pip install requests
-pip install scikit-image
+sudo pip install scikit-image
 pip install scipy
-pip install tabulate
-pip install jira
+sudo pip install tabulate
+sudo pip install jira
 
 
 # maybe unused
