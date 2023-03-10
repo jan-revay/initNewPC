@@ -66,7 +66,7 @@ sudo snap install signal-desktop
 sudo snap install caprine
 
 sudo apt install -y vim neovim qtcreator kdevelop
-sudo apt install -y ripgrep xdotool tree curl neofetch htop tmux at zsh traceroute
+sudo apt install -y ripgrep xdotool tree curl neofetch htop tmux at zsh traceroute jq
 sudo apt install -y linux-tools-common linux-tools-generic linux-tools-"$(uname -r)"
 sudo apt install -y git gitk python3-pip doxygen g++-multilib
 sudo apt install -y make build-essential ccache ninja-build
@@ -112,6 +112,12 @@ pip install scipy
 sudo pip install tabulate
 sudo pip install jira
 
+# GNOME extensions
+wget -O gnome-shell-extension-installer "https://github.com/brunelli/gnome-shell-extension-installer/raw/master/gnome-shell-extension-installer"
+$ chmod +x gnome-shell-extension-installer
+$ mv gnome-shell-extension-installer /usr/bin/
+
+# TODO add the extension install list
 
 # maybe unused
 sudo snap install gitkraken

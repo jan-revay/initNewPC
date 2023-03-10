@@ -1,6 +1,11 @@
 #!/bin/bash -x
 export PS4="\[\033[1;93m\]+ \[\033[0m\]"
 
+# TODO
+# in settings
+#    - desktop icons large
+#    - dock icons large
+#    - multitasking -> fixed number of workspaces
 
 mkdir ~/books
 mkdir ~/c  # code
@@ -12,6 +17,12 @@ EMAIL_DOMAIN="gmail.com"
 git config --global user.email "${EMAIL_NAME}@${EMAIL_DOMAIN}"
 
 git config --list --show-origin
+
+# GNOME TWEAKS
+
+# TODO add lower window on middle click
+# TODO add keyboard settings
+# TODO add fonts settings scaling factor
 
 # KEYBOARD SHORTCUTS
 gsettings set org.gnome.settings-daemon.plugins.media-keys home      "['<Super>e']"
