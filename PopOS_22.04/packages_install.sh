@@ -22,6 +22,7 @@ fi
 
 # COMPILERS, DEBUGGERS AND RUNTIMES
 
+# TODO check whether PopOS does not already have the latest LLVM compiler
 # Install the most recent llvm see https://apt.llvm.org/
 pushd /tmp || exit
 wget https://apt.llvm.org/llvm.sh
@@ -105,6 +106,7 @@ chmod +x gnome-shell-extension-installer
 sudo mv gnome-shell-extension-installer /usr/bin/
 
 gnome-shell-extension-installer 701
+# TODO restart GNOME (resp. only reload the extension list if possible)
 gnome-extensions enable scroll-workspaces@gfxmonk.net
 gnome-shell-extension-installer 3851
 gnome-extensions enable workspaces-bar@fthx
