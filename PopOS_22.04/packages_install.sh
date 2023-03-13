@@ -6,75 +6,74 @@
 # - ASP solver (e.g. with Datalog syntax)
 
 export PS4="\[\033[1;93m\]+ \[\033[0m\]"
-readonly GCC_VERSION=12
+readonly LLVM_VERSION=15  # CURRENT_LLVM_STABLE
+readonly GCC_VERSION=12  # CURRENT_LLVM_STABLE
 
 sudo apt update
 sudo apt upgrade
-apt list --upgradable # check for the packages that were not upgraded
+flatpak update
 
-if lspci | grep -i vmware; then  # we are running in VMware virtual machine
-    sudo apt install -y open-vm-tools open-vm-tools-desktop  # install VMware drivers
-else # we are running bare metal (I don't VirtualBox or other hypervisors)
+if lspci | grep -i vmware; then  # if the script is running inside of a VMware virtual machine
+    sudo apt install -y open-vm-tools open-vm-tools-desktop  # install "VMware tools" (drivers)
+else # we are running bare metal (I don't use VirtualBox or other hypervisors)
     # sudo snap install spotify
     # sudo snap install zoom-client
     sudo apt install -y logiops
 fi
 
-# COMPILERS, DEBUGGERS AND RUNTIMES
+# ===== COMPILERS, DEBUGGERS, BUILD SYSTEMS, PACKAGE MANAGERS AND RUNTIMES ===== 
 
-# TODO check whether PopOS does not already have the latest LLVM compiler
-# Install the most recent llvm see https://apt.llvm.org/
-pushd /tmp || exit
-wget https://apt.llvm.org/llvm.sh
-chmod +x llvm.sh
-sudo ./llvm.sh all
-rm llvm.sh
-popd || exit
+# Clang
+sudo apt install -y clang-${LLVM_VERSION} lldb-${LLVM_VERSION} lld-${LLVM_VERSION} \
+    clangd-${LLVM_VERSION} clang-tidy-${LLVM_VERSION} clang-format-${LLVM_VERSION} \
+    clang-tools-${LLVM_VERSION} llvm-${LLVM_VERSION}-dev lld-${LLVM_VERSION} \
+    llvm-${LLVM_VERSION}-tools libomp-${LLVM_VERSION}-dev libc++-${LLVM_VERSION}-dev \
+    lldb-${LLVM_VERSION} libc++abi-${LLVM_VERSION}-dev libclang-common-${LLVM_VERSION}-dev \
+    libclang-${LLVM_VERSION}-dev libclang-cpp${LLVM_VERSION}-dev libunwind-${LLVM_VERSION}-dev
 
-
-# TODO improve the Rust installation process using rustup.sh script
-sudo apt install -y gcc-${GCC_VERSION} rustc gprolog haskell-platform coq coqide
-sudo apt install -y rr # see https://github.com/rr-debugger/rr/wiki/Using-rr-in-an-IDE
-
-# runtimes
-sudo apt install -y default-jre dotnet6
-
-# FLATPAKS
-flatpak install clion
-flatpak install postman
-flatpak install todoist
-flatpak install foliate
-flatpak install signal
-flatpak install caprine
-
-# graphics & books & sound
-sudo apt install -y gimp krita inkscape okular evince vlc audacity
+# @note latest GCC should already be installed in the PopOS_22.04 image
+# @note rustc in PopOS_22.04 image is recent enough (a few months old)
+# ad rr see https://github.com/rr-debugger/rr/wiki/Using-rr-in-an-IDE
+sudo apt install -y gcc-${GCC_VERSION} rr rustc gprolog haskell-platform coq \
+    default-jre dotnet6
+sudo apt install -y make build-essential ccache ninja-build
+sudo apt install -y linux-tools-common linux-tools-generic linux-tools-"$(uname -r)"
 
 # programming tools
-sudo apt install -y code vim neovim emacs qtcreator kdevelop
-sudo apt install -y ripgrep xdotool tree curl neofetch htop tmux at zsh traceroute jq
-sudo apt install -y linux-tools-common linux-tools-generic linux-tools-"$(uname -r)"
-sudo apt install -y git gitk python3-pip doxygen g++-multilib
-sudo apt install -y make build-essential ccache ninja-build
+sudo apt install -y code vim neovim emacs meld qtcreator kdevelop coqide  # editors, tools and IDEs
+flatpak install clion postman dfeet                                       # editors, tools and IDEs (flatpak)
+sudo apt install -y git gitk doxygen g++-multilib qt6-base-dev
 sudo apt install -y cmake cmake-gui
 
-# tweaks
-sudo apt install -y ttf-mscorefonts-installer
-sudo apt install -y dconf-editor gnome-tweaks
+# misc tools
+sudo apt install -y ripgrep xdotool tree curl neofetch htop tmux at zsh traceroute jq
 
-# additional static analyzers
+# static analyzers and package managers
+sudo apt install -y python3-pip
+sudo pip install conan
 sudo apt install -y cppcheck iwyu
-sudo pip install flawfinder # C++ lint
+sudo pip install flawfinder # C++ linter
 sudo pip install cpplint
-
 # TODO sudo snap install codechecker
 # TODO fb infer
 # TODO cppdepend
 # TODO protolint
 # TODO PVS
 
-# C++ package managers
-sudo pip install conan
+# ===== MESSAGING, PRODUCTIVITY, GRAPHICS, SOUND AND BOOKS =====
+
+sudo apt install -y gimp krita inkscape okular evince vlc audacity
+sudo apt install -y ttf-mscorefonts-installer
+
+# Flatpaks
+flatpak install foliate todoist signal caprine
+
+# ===== GUI TWEAKS AND AUTOMATIONS ===== 
+sudo apt install -y dconf-editor gnome-tweaks
+
+# ===== PYTHON LIBRARIES =====
+
+# @warning installing the libraries globally might not be the best idea
 sudo pip install scikit-image
 sudo pip install docutils
 sudo pip install matplotlib
@@ -83,7 +82,6 @@ sudo pip install numpy
 sudo pip install jira
 sudo pip install tabulate
 
-# Python packages
 pip install bitarray
 pip install bson
 pip install h5py
@@ -94,22 +92,38 @@ pip install lxml
 pip install mock
 pip install pandas
 pip install Pillow
-pip install pymongo
+pip installl quantities
 pip install pyyaml
 pip install quantities
 pip install requests
 pip install scipy
 
-# GNOME extensions
-wget -O gnome-shell-extension-installer "https://github.com/brunelli/gnome-shell-extension-installer/raw/master/gnome-shell-extension-installer"
+# ===== GNOME EXTENSIONS =====
+wget -O gnome-shell-extension-installer \
+    "https://github.com/brunelli/gnome-shell-extension-installer/raw/master/gnome-shell-extension-installer"
 chmod +x gnome-shell-extension-installer
 sudo mv gnome-shell-extension-installer /usr/bin/
 
-gnome-shell-extension-installer 701
+# gnome-shell-extension-installer 701    # scroll-workspaces@gfxmonk.net
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "scroll-workspaces@gfxmonk.net"
+# gnome-shell-extension-installer 3851   # workspaces-bar@fthx
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "workspaces-bar@fthx"
+# gnome-shell-extension-installer 5278
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "pano@elhan.io"
+
+
+# TO TRY
+gnome-shell-extension-installer 4356
+sudo apt install gir1.2-gda-5.0 gir1.2-gsound-1.0
+
 # TODO restart GNOME (resp. only reload the extension list if possible)
 gnome-extensions enable scroll-workspaces@gfxmonk.net
-gnome-shell-extension-installer 3851
 gnome-extensions enable workspaces-bar@fthx
+
+
 # TODO add the extension install list
 
 # maybe unused
@@ -119,5 +133,14 @@ sudo snap install colorpie
 sudo snap install sqlitebrowser
 sudo apt install polar-bookshelf
 
+# ==== TO TRY ====
+sudo apt install actiona # automations, written in C++ https://github.com/Jmgr/actiona
+sudo apt install autokey-common autokey-gtk
+
+# interesting
+# Workflow from Raffaele
+# 
+
 # cleanup
 sudo apt autoremove
+apt list --upgradable # check for the packages that were not upgraded

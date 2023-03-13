@@ -12,10 +12,9 @@ sudo apt update
 sudo apt upgrade
 apt list --upgradable # check for the packages that were not upgraded
 
-readonly IS_VMWARE_VIRTUAL_MACHINE=true  # maybe make this a parameter in the future
-if [ ${IS_VMWARE_VIRTUAL_MACHINE} ]; then
-    sudo apt install -y open-vm-tools open-vm-tools-desktop  # VMware drivers
-else
+if lspci | grep -i vmware; then  # we are running in VMware virtual machine
+    sudo apt install -y open-vm-tools open-vm-tools-desktop  # install VMware drivers
+else # we are running bare metal (I don't VirtualBox or other hypervisors)
     sudo snap install spotify
     sudo snap install zoom-client
     sudo apt install -y logiops
