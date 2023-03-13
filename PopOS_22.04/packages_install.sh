@@ -4,6 +4,9 @@
 # TODO
 # - Docker
 # - ASP solver (e.g. with Datalog syntax)
+# - go through the flatpack and PopOS store and install the relevant stuff
+# - remove google chrome tray icon?
+# - order and tidy the tray icons
 
 export PS4="\[\033[1;93m\]+ \[\033[0m\]"
 readonly LLVM_VERSION=15  # CURRENT_LLVM_STABLE
@@ -99,47 +102,54 @@ pip install requests
 pip install scipy
 
 # ===== GNOME EXTENSIONS =====
-wget -O gnome-shell-extension-installer \
-    "https://github.com/brunelli/gnome-shell-extension-installer/raw/master/gnome-shell-extension-installer"
-chmod +x gnome-shell-extension-installer
-sudo mv gnome-shell-extension-installer /usr/bin/
 
-# gnome-shell-extension-installer 701    # scroll-workspaces@gfxmonk.net
+# org.gnome.Shell.Extensions.InstallRemoteExtension() is the same DBus method that is used in the
+# gnome-browser-connector package (the package that installs extesions via Chrome/Firefox plugin)
+# @note the gdbus call InstallRemoteExtension() is invoked twice twice as sometimes the first call fails
+
 gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
     /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "scroll-workspaces@gfxmonk.net"
-# gnome-shell-extension-installer 3851   # workspaces-bar@fthx
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "scroll-workspaces@gfxmonk.net"
+
 gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
     /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "workspaces-bar@fthx"
-# gnome-shell-extension-installer 5278
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "workspaces-bar@fthx"
+
+# Gnome extensions to try
+sudo apt install -y gir1.2-gda-5.0 gir1.2-gsound-1.0 # pano clipboard manager needs these packages
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "pano@elhan.io"
 gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
     /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "pano@elhan.io"
 
+sudo apt install gnome-shell-extension-manager gir1.2-gtop-2.0 lm-sensors # vitals monitor needs that
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "Vitals@CoreCoding.com"
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "Vitals@CoreCoding.com"
 
-# TO TRY
-gnome-shell-extension-installer 4356
-sudo apt install gir1.2-gda-5.0 gir1.2-gsound-1.0
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "hide-universal-access@akiirui.github.io"
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "hide-universal-access@akiirui.github.io"
 
-# TODO restart GNOME (resp. only reload the extension list if possible)
-gnome-extensions enable scroll-workspaces@gfxmonk.net
-gnome-extensions enable workspaces-bar@fthx
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension \
+    "auto-move-windows@gnome-shell-extensions.gcampax.github.com"
+gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
+    /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension \
+    "auto-move-windows@gnome-shell-extensions.gcampax.github.com"
 
 
-# TODO add the extension install list
-
-# maybe unused
-# TODO - convert to flatpaks
-sudo snap install gitkraken
-sudo snap install colorpie
-sudo snap install sqlitebrowser
-sudo apt install polar-bookshelf
+# ===== MAYBE UNUSED =====
+flatpak install gitkraken
+sudo apt install -y sqlitebrowser
 
 # ==== TO TRY ====
 sudo apt install actiona # automations, written in C++ https://github.com/Jmgr/actiona
 sudo apt install autokey-common autokey-gtk
-
-# interesting
-# Workflow from Raffaele
-# 
 
 # cleanup
 sudo apt autoremove
