@@ -125,7 +125,7 @@ gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
 gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
     /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "pano@elhan.io"
 
-sudo apt install gnome-shell-extension-manager gir1.2-gtop-2.0 lm-sensors # vitals monitor needs that
+sudo apt install -y gnome-shell-extension-manager gir1.2-gtop-2.0 lm-sensors # vitals monitor needs that
 gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
     /org/gnome/Shell/Extensions --method org.gnome.Shell.Extensions.InstallRemoteExtension "Vitals@CoreCoding.com"
 gdbus call --session --dest org.gnome.Shell.Extensions --object-path \
