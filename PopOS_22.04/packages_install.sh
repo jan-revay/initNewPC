@@ -149,8 +149,8 @@ flatpak install gitkraken
 sudo apt install -y sqlitebrowser
 
 # ==== TO TRY ====
-sudo apt install actiona # automations, written in C++ https://github.com/Jmgr/actiona
-sudo apt install autokey-common autokey-gtk
+sudo apt install -y actiona # automations, written in C++ https://github.com/Jmgr/actiona
+sudo apt install -y autokey-common autokey-gtk
 
 # cleanup
 sudo apt autoremove
