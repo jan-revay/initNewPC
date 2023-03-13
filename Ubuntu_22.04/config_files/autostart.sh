@@ -12,6 +12,8 @@ caprine &
 
 echo "ALL APPS STARTED"
 
+# TODO wait until all the windows are open
+
 ./position_windows.sh
 
 # spotify &
