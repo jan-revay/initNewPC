@@ -44,6 +44,7 @@ sudo apt install -y linux-tools-common linux-tools-generic linux-tools-"$(uname 
 
 # programming tools
 sudo apt install -y code vim neovim emacs meld qtcreator kdevelop coqide  # editors, tools and IDEs
+# todo remove need for user interaction (Y - enter)
 flatpak install clion postman dfeet                                       # editors, tools and IDEs (flatpak)
 sudo apt install -y git gitk doxygen g++-multilib qt6-base-dev
 sudo apt install -y cmake cmake-gui
